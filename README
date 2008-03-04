@@ -1,0 +1,3 @@
+= Ticket emailer plugin for Redmine
+
+A plugin to allow users to email new tickets / issues to Redmine's issue tracking system on a per-project level.

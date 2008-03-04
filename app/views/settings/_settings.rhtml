@@ -1,0 +1,48 @@
+<% string_fields = ProjectCustomField.find :all %>
+
+This is for accepting emails to create and update tickets.  You will need to go to 'Admin -> Custom fields' and create the follow fields of type 'string'.
+<ul>
+    <li>Email Server</li>
+    <li>Email Login</li>
+    <li>Email Password</li>
+    <li>Email Folder / Label</li>
+</ul>
+You also need to create a boolean custom field of "Use SSL".
+
+<p><label>Email Server</label>
+<%= select_tag 'settings[email_server]',
+               '<option value="">(Select one)</option>' +
+               options_from_collection_for_select(string_fields, :id, :name, @settings['email_server'].to_i) %><br />
+</p>
+
+<p><label>Email Login</label>
+<%= select_tag 'settings[email_login]',
+               '<option value="">(Select one)</option>' +
+               options_from_collection_for_select(string_fields, :id, :name, @settings['email_login'].to_i) %><br />
+</p>
+
+<p><label>Email Password</label>
+<%= select_tag 'settings[email_password]',
+               '<option value="">(Select one)</option>' +
+               options_from_collection_for_select(string_fields, :id, :name, @settings['email_password'].to_i) %><br />
+</p>
+
+<p><label>Email Folder</label>
+<%= select_tag 'settings[email_folder]',
+               '<option value="">(Select one)</option>' +
+               options_from_collection_for_select(string_fields, :id, :name, @settings['email_folder'].to_i) %><br />
+</p>
+
+<p><label>Email Port</label>
+<%= select_tag 'settings[email_port]',
+               '<option value="">(Select one)</option>' +
+               options_from_collection_for_select(string_fields, :id, :name, @settings['email_port'].to_i) %><br />
+</p>
+
+<p><label>Use SSL</label>
+<%= select_tag 'settings[use_ssl]',
+               '<option value="">(Select one)</option>' +
+               options_from_collection_for_select(string_fields, :id, :name, @settings['use_ssl'].to_i) %><br />
+</p>
+
+

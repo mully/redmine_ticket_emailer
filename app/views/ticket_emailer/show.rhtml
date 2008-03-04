@@ -1,0 +1,21 @@
+<% if @builds %>
+<h2>Continuous integration</h2>
+
+<% if @builds.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+    <div id="builds">
+    <% @builds.each do |build| %>
+      <% content_tag('div', :class => 'build ' + (build[:success] == true ? 'success' : 'failure')) do -%>
+      <%= format_time(build[:time]) %>: <%= link_to build[:title], build[:url] %><br />
+      <%= build[:description] if (@show_descriptions == 2 || (@show_descriptions == 1 && !build[:success])) %>
+      <% end -%>
+    <% end %>
+    </div>
+<% end %>
+
+<% content_for :header_tags do %>
+    <%= stylesheet_link_tag '/plugin_assets/simple_ci/stylesheets/simple_ci' %>
+<% end %>
+
+<% end %>
