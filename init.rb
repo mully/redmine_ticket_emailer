@@ -20,7 +20,7 @@ require 'redmine'
 RAILS_DEFAULT_LOGGER.info 'Ticket Emailer Plugin'
 
 # Redmine ticket emailer plugin
-Redmine::Plugin.register :ticket_emailer do
+Redmine::Plugin.register :redmine_ticket_emailer do
   name 'Ticket Emailer'
   author 'Jim Mulholland'
   description 'A plugin to allow users to email tickets to Redmine.'

@@ -1,5 +1,0 @@
-/* Simple CI plugin stylesheet */
-
-#builds div.build { margin-bottom: 16px; padding: 4px; }
-#builds div.success {background-color: #dfffdf;}
-#builds div.failure {background-color: #ffe3e3;}
