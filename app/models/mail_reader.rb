@@ -32,22 +32,22 @@ class MailReader < ActionMailer::Base
 
     @projects.each do |@@project|
     
-        email_server = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_ticket_emailer['email_server'].to_i}        
+        email_server = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_redmine_ticket_emailer['email_server'].to_i}        
         email_server = email_server.value if email_server
         
-        email_login = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_ticket_emailer['email_login'].to_i}      
+        email_login = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_redmine_ticket_emailer['email_login'].to_i}      
         email_login = email_login.value if email_login
         
-        email_password = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_ticket_emailer['email_password'].to_i}   
+        email_password = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_redmine_ticket_emailer['email_password'].to_i}   
         email_password = email_password.value if email_password
         
-        email_folder = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_ticket_emailer['email_folder'].to_i}  
+        email_folder = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_redmine_ticket_emailer['email_folder'].to_i}  
         email_folder = email_folder.value if email_folder
         
-        use_ssl = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_ticket_emailer['use_ssl'].to_i} 
+        use_ssl = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_redmine_ticket_emailer['use_ssl'].to_i} 
         use_ssl = use_ssl.value if use_ssl
         
-        email_port = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_ticket_emailer['email_port'].to_i}
+        email_port = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_redmine_ticket_emailer['email_port'].to_i}
         email_port = email_port.value.to_i if email_port
                 
         imap = Net::IMAP.new(email_server, port=email_port, usessl=use_ssl)
