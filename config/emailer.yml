@@ -9,8 +9,8 @@
 # email_folder -- The folder name you would like your email messages retrieved from;
 # use_ssl -- If your email server requires you to use ssl to retrieve messages;
 #
-# THIS IS AN EXAMPLE.  REPLACE THIS WITH YOUR REAL SERVER DATA AND COPY TO: {RAILS_ROOT}/config directory
-# of your core Redmine project.
+# THIS IS AN EXAMPLE.  REPLACE THIS WITH YOUR REAL SERVER DATA AND COPY TO: {RAILS_ROOT}/config DIRECTORY
+# OF YOUR CORE REDMINE PROJECT.
 
 example_project:
     email_server: imap.gmail.com
