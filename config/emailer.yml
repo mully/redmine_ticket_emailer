@@ -1,0 +1,21 @@
+# Emailer Configuration Parameters
+#
+# These parameters are broken out by multiple projects where each project name is the main node.
+#
+# email_server -- The email server name;  This plugin currently only supports IMAP;  e.g. imap.gmail.com
+# email_login -- The login name of the user which this tool will use to retrieve emails;
+# email_password -- The password of the above login
+# email_port -- The port the email server uses;  (Gmail uses port 993)
+# email_folder -- The folder name you would like your email messages retrieved from;
+# use_ssl -- If your email server requires you to use ssl to retrieve messages;
+#
+# THIS IS AN EXAMPLE.  REPLACE THIS WITH YOUR REAL SERVER DATA AND COPY TO: {RAILS_ROOT}/config directory
+# of your core Redmine project.
+
+example_project:
+    email_server: imap.gmail.com
+    email_login: email_user@example.cc
+    email_password: my_password
+    email_port: 993
+    email_folder: support_issues
+    use_ssl: true
