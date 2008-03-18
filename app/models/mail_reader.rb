@@ -1,10 +1,8 @@
-require 'net/imap'
-
 class MailReader < ActionMailer::Base
 
   def receive(email)         
         
-    issue = Issue.new(
+    issue = Issue.create(
         :subject => email.subject,
         :description => email.body,
         :priority_id => 3,
@@ -13,7 +11,6 @@ class MailReader < ActionMailer::Base
         :author_id => 2,
         :status_id => 1        
     )
-    issue.save    
     
     if email.has_attachments?
         for attachment in email.attachments        
@@ -27,41 +24,38 @@ class MailReader < ActionMailer::Base
   end
   
   def self.check_mail
-    # Find all of the projects that have enabled the "ticket emailer" plugin
-    @projects = Project.find :all, :include=>:enabled_modules, :conditions=>"enabled_modules.name='ticket_emailer'"
+  
+     begin
+       require 'net/imap'
+     rescue LoadError
+       raise RequiredLibraryNotFoundError.new('NET::Imap could not be loaded')
+     end
 
-    @projects.each do |@@project|
-    
-        email_server = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_redmine_ticket_emailer['email_server'].to_i}        
-        email_server = email_server.value if email_server
-        
-        email_login = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_redmine_ticket_emailer['email_login'].to_i}      
-        email_login = email_login.value if email_login
-        
-        email_password = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_redmine_ticket_emailer['email_password'].to_i}   
-        email_password = email_password.value if email_password
-        
-        email_folder = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_redmine_ticket_emailer['email_folder'].to_i}  
-        email_folder = email_folder.value if email_folder
-        
-        use_ssl = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_redmine_ticket_emailer['use_ssl'].to_i} 
-        use_ssl = use_ssl.value if use_ssl
-        
-        email_port = @@project.custom_values.detect {|v| v.custom_field_id == Setting.plugin_redmine_ticket_emailer['email_port'].to_i}
-        email_port = email_port.value.to_i if email_port
-                
-        imap = Net::IMAP.new(email_server, port=email_port, usessl=use_ssl)
+     @@config_path = (RAILS_ROOT + '/config/emailer.yml')
+     
+     # Cycle through all of the projects created in the yaml file
+     YAML.load_file(@@config_path).keys.each do |project_name|
+     
+        #Find the project based off the name in the YAML if the emailer is enabled in Redmine
+        @@project = Project.find_by_name project_name, :include=>:enabled_modules , :conditions=>"enabled_modules.name='ticket_emailer'"
 
-        imap.login(email_login, email_password)
-        imap.select(email_folder)
-        imap.search(['ALL']).each do |message_id|
-          msg = imap.fetch(message_id,'RFC822')[0].attr['RFC822']
-          MailReader.receive(msg)          
-          #Mark message as deleted and it will be removed from storage when user session closd
-          imap.store(message_id, "+FLAGS", [:Deleted])
+        unless @@project.nil?
+            @@config = YAML.load_file(@@config_path)[project_name].symbolize_keys
+                 
+            imap = Net::IMAP.new(@@config[:email_server], port=@@config[:email_port], usessl=@@config[:use_ssl])
+             
+            imap.login(@@config[:email_login], @@config[:email_password])
+            imap.select(@@config[:email_folder])  
+                     
+            imap.search(['ALL']).each do |message_id|
+              msg = imap.fetch(message_id,'RFC822')[0].attr['RFC822']
+              MailReader.receive(msg)          
+              #Mark message as deleted and it will be removed from storage when user session closd
+              imap.store(message_id, "+FLAGS", [:Deleted])
+            end
+            # tell server to permanently remove all messages flagged as :Deleted
+            imap.expunge()
         end
-        # tell server to permanently remove all messages flagged as :Deleted
-        imap.expunge()
     end
   end
   
@@ -78,6 +72,26 @@ class MailReader < ActionMailer::Base
         attached << a unless a.new_record?
     end
     attached
+  end
+  
+private
+
+  def connect_to_email
+     begin
+       require 'net/imap'
+     rescue LoadError
+       raise RequiredLibraryNotFoundError.new('NET::Imap could not be loaded')
+     end
+
+     begin
+       @@config_path = (RAILS_ROOT + '/config/emailer.yml')
+       @@config = YAML.load_file(@@config_path)['mindbites'].symbolize_keys
+     end
+             
+     imap = Net::IMAP.new(@@config[:email_server], port=@@config[:email_port], usessl=@@config[:use_ssl])
+     
+     imap.login(@@config[:email_login], @@config[:email_password])
+     imap.select(@@config[:email_folder])  
   end
 
 end

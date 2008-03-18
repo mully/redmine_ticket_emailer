@@ -25,18 +25,6 @@ Redmine::Plugin.register :redmine_ticket_emailer do
   author 'Jim Mulholland'
   description 'A plugin to allow users to email tickets to Redmine.'
   version '0.1.0'
-  
-  # The data necessary to log into your email server.
-  # These setting values will be id fields used to map to the
-  # project custom fields that will be set-up to add email
-  # server data on an individual project basis.
-  # For this first rev, I am assuming you have an IMAP server
-  settings :default => {'email_server' => 0,
-                        'email_login' => 0,
-                        'email_password' => 0,
-                        'use_ssl' => 0,
-                        'email_port' => 0,
-                        'email_folder' => 0}, :partial => 'settings/settings'
 
   # This plugin adds a project module
   # It can be enabled/disabled at project level (Project settings -> Modules)
@@ -46,6 +34,4 @@ Redmine::Plugin.register :redmine_ticket_emailer do
     permission :view_ticket_emailer, {:ticket_emailer => :show}
   end
 
-  # A new item is added to the project menu
-  menu :project_menu, 'Emailer Setup', :controller => 'ticket_emailer', :action => 'show'
 end
